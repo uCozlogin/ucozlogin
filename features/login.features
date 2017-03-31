@@ -3,12 +3,76 @@ Feature: Login
   In order to access the website content
   I need to log in to the website
  
-  Scenario: valid credentials
-   Given I am on the login page
-   When I provide the email address "test@mywebsite.com"
-   And I provide the password "Foo!bar1"
+  Scenario: Убедитесь, что на экране входа есть возможность ввести имя пользователя и пароль кнопка отправки и ссылкой для восстановления пароля
+   Given Форма для ввода имя пользователя и пароля
+   Then На форме присутсвуют поля для ввода имени пользователя и пароля, кнопка отправки, ссылка для восстановления пароля, ссылка для регистрации нового пользователя
+
+  Scenario: Убедитесь, что пользователь имеет возможность входа с действительными именем пользователя и паролем
+   Given Форма для ввода имя пользователя и пароля
+   When Ввести "project.14@inbox.ru" в поле ввода имени пользователя
+   And Ввести "uCozlogin" в поле для ввода пароля
    Then I should be successfully logged in
- 
+
+  Scenario: Убедитесь, что пользователь не может войти в систему с неверным именем пользователя и паролем
+   Given Форма для ввода имя пользователя и пароля
+   When Ввести "test@mywebsite.com" в поле ввода имени пользователя
+   And Ввести "Foo!bar1" в поле для ввода пароля
+   Then I should be successfully logged in
+   
+  Scenario: Убедитесь, что сообщение проверки отображается, если пользователь оставляет поле имени пользователя или пароля пустым   
+   Given Форма для ввода имя пользователя и пароля
+   When Ввести "test@mywebsite.com" в поле ввода имени пользователя
+   And Ввести "Foo!bar1" в поле для ввода пароля
+   Then I should be successfully logged in
+   
+  Scenario: Убедитесь, что сообщение проверки отображается, если пользователь превышает ограничение на количество символов в полях имени пользователя и пароля
+   Given Форма для ввода имя пользователя и пароля
+   When Ввести "test@mywebsite.com" в поле ввода имени пользователя
+   And Ввести "Foo!bar1" в поле для ввода пароля
+   Then I should be successfully logged in
+
+  Scenario: Проверить, что есть лимит на общее число безуспешных попыток
+   Given Форма для ввода имя пользователя и пароля
+   When Ввести "test@mywebsite.com" в поле ввода имени пользователя
+   And Ввести "Foo!bar1" в поле для ввода пароля
+   Then I should be successfully logged in
+   
+  Scenario: Проверить тайм-аут сеанса входа в систему
+   Given Форма для ввода имя пользователя и пароля
+   When Ввести "test@mywebsite.com" в поле ввода имени пользователя
+   And Ввести "Foo!bar1" в поле для ввода пароля
+   Then I should be successfully logged in
+
+  Scenario: Проверить появление сообщения «неправильное имя пользователя или пароль»
+   Given Форма для ввода имя пользователя и пароля
+   When Ввести "test@mywebsite.com" в поле ввода имени пользователя
+   And Ввести "Foo!bar1" в поле для ввода пароля
+   Then I should be successfully logged in
+   
+  Scenario: Проверить, можно ли вставить пароль скопировав его ранее копирования или нет   
+   Given Форма для ввода имя пользователя и пароля
+   When Ввести "test@mywebsite.com" в поле ввода имени пользователя
+   And Ввести "Foo!bar1" в поле для ввода пароля
+   Then I should be successfully logged in 
+   
+  Scenario: Проверить, что после входа в систему нажатие кнопки «Назад» пользователь не выходит из системы  
+   Given Форма для ввода имя пользователя и пароля
+   When Ввести "test@mywebsite.com" в поле ввода имени пользователя
+   And Ввести "Foo!bar1" в поле для ввода пароля
+   Then I should be successfully logged in  
+   
+  Scenario: Проверить, работают ли атаки SQL Injection на странице входа   
+   Given Форма для ввода имя пользователя и пароля
+   When Ввести "test@mywebsite.com" в поле ввода имени пользователя
+   And Ввести "Foo!bar1" в поле для ввода пароля
+   Then I should be successfully logged in  
+   
+  Scenario: Проверка уязвимости XSS на странице входа  
+   Given Форма для ввода имя пользователя и пароля
+   When Ввести "test@mywebsite.com" в поле ввода имени пользователя
+   And Ввести "Foo!bar1" в поле для ввода пароля
+   Then I should be successfully logged in  
+   
   Scenario Outline: invalid credentials
    Given I am on the login page
    When I provide the email address <email>
